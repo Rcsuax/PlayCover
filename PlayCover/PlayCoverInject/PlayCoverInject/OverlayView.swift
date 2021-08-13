@@ -72,6 +72,8 @@ class OverlayController {
                     Recorder.shared.stopRecord()
                 case .keyboardO:
                     Recorder.shared.playback()
+                case .keyboardF:
+                    InputController.root()?.alertWithTF()
                 case .keyboardJ:
                     addJoystick()
                 case .keyboardM:

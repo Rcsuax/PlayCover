@@ -30,7 +30,40 @@ class Shell {
     }
     
     static func removeQuarantine(_ app : URL){
-        shell("xattr -rd com.apple.quarantine \(app.esc)")
+        sudosh(app.esc)
+    }
+    
+    private static func sudosh(_ path : String){
+        let password = PasswordViewModel.shared.password
+        let passwordWithNewline = password + "\n"
+        let sudo = Process()
+        sudo.launchPath = "/usr/bin/sudo"
+        sudo.arguments = ["-S", "/usr/bin/xattr", "-d", "-r", "com.apple.quarantine", path]
+        let sudoIn = Pipe()
+        let sudoOut = Pipe()
+        sudo.standardOutput = sudoOut
+        sudo.standardError = sudoOut
+        sudo.standardInput = sudoIn
+        sudo.launch()
+
+        // Show the output as it is produced
+        sudoOut.fileHandleForReading.readabilityHandler = { fileHandle in
+            let data = fileHandle.availableData
+            if (data.count == 0) { return }
+            print("read \(data.count)")
+            print("\(String(bytes: data, encoding: .utf8) ?? "<UTF8 conversion failed>")")
+
+        }
+        // Write the password
+        sudoIn.fileHandleForWriting.write(passwordWithNewline.data(using: .utf8)!)
+
+        // Close the file handle after writing the password; avoids a
+        // hang for incorrect password.
+        try? sudoIn.fileHandleForWriting.close()
+
+        // Make sure we don't disappear while output is still being produced.
+        sudo.waitUntilExit()
+        print("Process did exit")
     }
     
     static func isIPAEncrypted(exec: URL) -> Bool {

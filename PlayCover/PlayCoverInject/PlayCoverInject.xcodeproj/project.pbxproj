@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		11805D04266F73F00070BB25 /* Values.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11805D03266F73F00070BB25 /* Values.swift */; };
+		53BCADBE26C48BC800D96ED4 /* Fullscreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53BCADBD26C48BC800D96ED4 /* Fullscreen.swift */; };
 		953B794A268C2A52001BF935 /* Toucher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 953B7949268C2A52001BF935 /* Toucher.swift */; };
 		953B795D268C31E4001BF935 /* Recorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 953B795C268C31E4001BF935 /* Recorder.swift */; };
 		953B795F268C53AA001BF935 /* KeyboardController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 953B795E268C53AA001BF935 /* KeyboardController.swift */; };
@@ -71,6 +72,7 @@
 
 /* Begin PBXFileReference section */
 		11805D03266F73F00070BB25 /* Values.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Values.swift; sourceTree = "<group>"; };
+		53BCADBD26C48BC800D96ED4 /* Fullscreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fullscreen.swift; sourceTree = "<group>"; };
 		953B7949268C2A52001BF935 /* Toucher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Toucher.swift; sourceTree = "<group>"; };
 		953B795C268C31E4001BF935 /* Recorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Recorder.swift; sourceTree = "<group>"; };
 		953B795E268C53AA001BF935 /* KeyboardController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardController.swift; sourceTree = "<group>"; };
@@ -278,6 +280,7 @@
 				11805D03266F73F00070BB25 /* Values.swift */,
 				953B7949268C2A52001BF935 /* Toucher.swift */,
 				953B795E268C53AA001BF935 /* KeyboardController.swift */,
+				53BCADBD26C48BC800D96ED4 /* Fullscreen.swift */,
 			);
 			path = PlayCoverInject;
 			sourceTree = "<group>";
@@ -475,6 +478,7 @@
 				FA39A0482636B15600EF2140 /* MouseController.swift in Sources */,
 				95B4112A268EFDAC00DBC813 /* UITableView-KIFAdditions.m in Sources */,
 				95B41127268EFDAC00DBC813 /* UIView-KIFAdditions.m in Sources */,
+				53BCADBE26C48BC800D96ED4 /* Fullscreen.swift in Sources */,
 				11805D04266F73F00070BB25 /* Values.swift in Sources */,
 				95B41113268EFDAC00DBC813 /* UIView-Debugging.m in Sources */,
 			);

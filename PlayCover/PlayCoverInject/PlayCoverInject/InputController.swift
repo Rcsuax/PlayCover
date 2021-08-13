@@ -25,7 +25,9 @@ extension UIWindow {
 
     @objc static public func initUI(){
         if #available(macOS 11, *) {
-        window()?.frame = CGRect(x: 0, y: 0, width: Values.screenWidth, height: Values.screenHeight)
+            if let vals = root()?.getScreenValues(){
+                window()?.frame = CGRect(x: vals[0], y: vals[1], width: ((Values.screenWidth) * vals[2]) + vals[0], height: ((Values.screenHeight) * vals[3]) + vals[1])
+            }
         }
         root()?.setup()
     }
@@ -99,6 +101,10 @@ extension UIViewController {
         
         centre.addObserver(forName: NSNotification.Name.GCMouseDidConnect, object: nil, queue: main) { (note) in
             MouseController.shared.setupMouse()
+        }
+        
+        centre.addObserver(forName: NSNotification.Name.GCControllerDidConnect, object: nil, queue: main) { (note) in
+            self.showGameControllerAlert(GCController.current?.vendorName ?? "XBox One S")
         }
         
         InputController.updateControls()

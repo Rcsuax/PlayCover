@@ -7,6 +7,7 @@ struct AppInstallView: View {
     @EnvironmentObject var installData: InstallAppViewModel
     @EnvironmentObject var logger: Logger
     @EnvironmentObject var error: ErrorViewModel
+    @EnvironmentObject var pwd: PasswordViewModel
     
     @State var isLoading : Bool = false
     @State var showWrongfileTypeAlert : Bool = false
@@ -14,14 +15,23 @@ struct AppInstallView: View {
     private func insertApp(url : URL){
         isLoading = true
         logger.logs = ""
-        AppInstaller.shared.installApp(url : url, returnCompletion: { (app) in
-            DispatchQueue.main.async {
+        
+        pwd.promptForReply("Please, input your admin password", "App needs it for xattr command", completion: {(strCommitMsg:String, bResponse:Bool) in
+            if bResponse {
+                pwd.password = strCommitMsg
+                AppInstaller.shared.installApp(url : url, returnCompletion: { (app) in
+                    DispatchQueue.main.async {
+                        isLoading = false
+                        if let pathToApp = app {
+                            pathToApp.showInFinder()
+                        }
+                    }
+                })
+            } else{
                 isLoading = false
-                if let pathToApp = app {
-                    pathToApp.showInFinder()
-                }
             }
         })
+
     }
     
     private func selectFile() {
@@ -34,7 +44,7 @@ struct AppInstallView: View {
     
     var body: some View {
             VStack{
-                Text("Play Cover v0.5.0")
+                Text("Play Cover v 0.5.0 + 0.1.0 You can (not) release")
                     .fontWeight(.bold)
                     .font(.system(.largeTitle, design: .rounded)).padding().frame(minHeight: 150)
                 VStack {

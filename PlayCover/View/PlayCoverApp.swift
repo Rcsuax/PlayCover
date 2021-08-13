@@ -23,6 +23,7 @@ struct PlayCoverApp: App {
                 .environmentObject(InstallAppViewModel.shared)
                 .environmentObject(UserIntentFlow.shared)
                 .environmentObject(ErrorViewModel.shared)
+                .environmentObject(PasswordViewModel.shared)
                 .environmentObject(Logger.shared).accentColor(/*@START_MENU_TOKEN@*/.blue/*@END_MENU_TOKEN@*/)
         }.windowStyle(HiddenTitleBarWindowStyle())
     }
