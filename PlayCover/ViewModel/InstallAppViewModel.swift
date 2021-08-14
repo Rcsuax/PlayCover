@@ -13,8 +13,10 @@ class InstallAppViewModel: ObservableObject {
     
     @Published var makeFullscreen : Bool = false
     @Published var fixLogin : Bool = false
-    @Published var useAlternativeWay : Bool = false
+    @Published var useAlternativePatch : Bool = false
+    @Published var useAlternativeDecrypt : Bool = false
     @Published var exportForSideloadly : Bool = false
+    @Published var clearAppCaches : Bool = false
     
     required init() {}
 

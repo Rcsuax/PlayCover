@@ -1,5 +1,5 @@
 //
-//  BinaryPatcher.swift
+//  Decryptor.swift
 //  PlayCover
 //
 
@@ -7,24 +7,41 @@ import Foundation
 
 class BinaryPatcher {
     
+    static let shared = BinaryPatcher()
+    
+    private var extracted : [String] = []
+    
     static let possibleHeaders : [Array<UInt8>] = [
         [202, 254, 186, 190],
         [207, 250, 237, 254]
     ]
     
-    static func patchApp(app : URL) throws {
-        ulog("Converting app\n")
+    func extractMachosFrom(_ app: URL) throws {
+        extracted = []
+        if vm.makeFullscreen {
+            extracted.append("/PlayCoverInject")
+            extracted.append("/MacHelper")
+        }
         if let enumerator = fm.enumerator(at: app, includingPropertiesForKeys: [.isRegularFileKey], options: [.skipsHiddenFiles, .skipsPackageDescendants]) {
             for case let fileURL as URL in enumerator {
                 do {
                     let fileAttributes = try fileURL.resourceValues(forKeys:[.isRegularFileKey])
                     if fileAttributes.isRegularFile! {
-                        if isMacho(fileUrl: fileURL){
-                            try patchBinary(fileUrl: fileURL)
+                        if BinaryPatcher.isMacho(fileUrl: fileURL){
+                            extracted.append(fileURL.path.replacingOccurrences(of: app.path, with: ""))
                         }
                     }
                 }
             }
+        }
+    }
+    
+    func decryptMachos(_ app: URL, installed : String, exec : URL) throws {
+        for macho in extracted {
+                let src = URL(fileURLWithPath: installed.appending(macho))
+                let target = URL(fileURLWithPath: app.path.appending(macho))
+                try fm.delete(at: target)
+                sh.appdecrypt(src, target: target)
         }
     }
     
@@ -36,7 +53,7 @@ class BinaryPatcher {
             if bts.count > 4{
                 let header = bts[...3]
                 if header.count == 4{
-                    if(possibleHeaders.contains(Array(header))){
+                    if(BinaryPatcher.possibleHeaders.contains(Array(header))){
                         return true
                     }
                 }
@@ -45,26 +62,33 @@ class BinaryPatcher {
         return false
     }
     
-    private static func patchBinary(fileUrl : URL) throws {
-        ulog("Converting \(fileUrl.lastPathComponent)\n")
+     func patchApp(_ app : URL) throws {
+        ulog("Patching app\n")
+        for macho in extracted{
+            try BinaryPatcher.patchBinary(URL(fileURLWithPath: app.path.appending(macho)))
+        }
+    }
+    
+    private static func patchBinary(_ macho : URL) throws {
+        ulog("Patching \(macho.lastPathComponent)\n")
         
-        if vm.useAlternativeWay {
+        if vm.useAlternativePatch {
             try internalWay()
         } else{
             vtoolWay()
         }
         
-        sh.codesign(fileUrl)
+        sh.codesign(macho)
         
         func vtoolWay(){
-            sh.vtoolPatch(fileUrl)
+            sh.vtoolPatch(macho)
         }
         
         func internalWay() throws {
-            convert(fileUrl.path.esc)
-            let newUrl = fileUrl.path.appending("_sim")
-            try fm.delete(at: fileUrl)
-            try fm.moveItem(atPath: newUrl, toPath: fileUrl.path)
+            convert(macho.path.esc)
+            let newUrl = macho.path.appending("_sim")
+            try fm.delete(at: macho)
+            try fm.moveItem(atPath: newUrl, toPath: macho.path)
         }
         
     }

@@ -22,7 +22,7 @@ class MouseController{
         }
         
         point.x = point.x * 1.3
-        point.y = (Values.screenHeight - point.y * 1.3)
+        point.y = (InputController.screenHeight - point.y * 1.3)
         return point
     }
     
@@ -48,7 +48,6 @@ class MouseEmitter{
     var size : CGFloat = 0
     var currentPosition : CGPoint = CGPoint(x: 0, y: 0)
     var active = true
-    var setup = false
     
     func reset(){
         if(active){
@@ -63,13 +62,6 @@ class MouseEmitter{
         self.centerX = centerX
         self.centerY = centerY
         self.currentPosition = CGPoint(x: centerX, y: centerY)
-        if(!setup){
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                OverlayController.shared.changeState()
-                OverlayController.shared.changeState()
-                self.setActive(active: true)
-            }
-        }
     }
     
     func update(deltaX : CGFloat, deltaY : CGFloat){

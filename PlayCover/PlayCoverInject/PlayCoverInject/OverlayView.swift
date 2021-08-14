@@ -25,7 +25,6 @@ class OverlayController {
     }
     
     public func changeState(){
-        MouseEmitter.shared.setup = true
         if(overlayView.isUserInteractionEnabled){
             MouseEmitter.shared.setActive(active: true)
             overlayView.isUserInteractionEnabled = false
@@ -152,7 +151,7 @@ class OverlayController {
         
     }
     
-    private var displayMult = CGFloat(max(Values.screenWidth, Values.screenHeight) / 50) * 3
+    private var displayMult = CGFloat(max(InputController.screenWidth, InputController.screenHeight) / 50) * 3
 
     public func addJoystick(){
         if(overlayView.isUserInteractionEnabled){
@@ -191,8 +190,8 @@ class OverlayView: UIView {
         super.init(frame: .zero)
         self.setX(x: 0)
         self.setY(y: 0)
-        self.setHeight(height: Values.screenHeight)
-        self.setWidth(width:  Values.screenWidth)
+        self.setHeight(height: InputController.screenHeight)
+        self.setWidth(width:  InputController.screenWidth)
         self.isUserInteractionEnabled = false
     }
     

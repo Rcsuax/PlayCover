@@ -13,6 +13,10 @@ class Shell {
         return shell("csrutil status").contains("enabled")
     }
     
+    static func isPRAMValid() -> Bool {
+        return shell("nvram -p").contains("cs_enforcement_disable=1")
+    }
+    
     static func fetchEntitlements(_ exec : URL) -> String {
         return shell("codesign -d --entitlements :- \(exec.esc)")
     }
@@ -30,15 +34,15 @@ class Shell {
     }
     
     static func removeQuarantine(_ app : URL){
-        sudosh(app.esc)
+        sudosh(["-S", "/usr/bin/xattr", "-d", "-r", "com.apple.quarantine", app.esc])
     }
     
-    private static func sudosh(_ path : String){
+    private static func sudosh(_ args : [String]){
         let password = PasswordViewModel.shared.password
         let passwordWithNewline = password + "\n"
         let sudo = Process()
         sudo.launchPath = "/usr/bin/sudo"
-        sudo.arguments = ["-S", "/usr/bin/xattr", "-d", "-r", "com.apple.quarantine", path]
+        sudo.arguments = args
         let sudoIn = Pipe()
         let sudoOut = Pipe()
         sudo.standardOutput = sudoOut
@@ -66,7 +70,7 @@ class Shell {
         print("Process did exit")
     }
     
-    static func isIPAEncrypted(exec: URL) -> Bool {
+    static func isMachoEncrypted(exec: URL) -> Bool {
         return shell("otool -l \(exec.esc) | grep LC_ENCRYPTION_INFO -A5").contains("cryptid 1")
     }
     
@@ -84,7 +88,7 @@ class Shell {
     }
     
     static func removeAppFromApps(_ bundleName : String){
-        ulog(shell("rm -rf /Applications/\(bundleName.esc).app/"))
+        sudosh(["-S", "/bin/rm", "-r", "-f", "/Applications/\(bundleName.esc).app/"])
     }
     
     static func copyAppToTemp(_ bundleName : String, name : String, temp: URL){

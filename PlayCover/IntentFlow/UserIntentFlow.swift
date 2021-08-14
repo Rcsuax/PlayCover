@@ -14,6 +14,7 @@ class UserIntentFlow: ObservableObject {
     static let shared = UserIntentFlow()
     
     @Published var showAppsDownloadView : Bool = false
+    @Published var showTroubleshootView : Bool = false
     
     required init() {}
 

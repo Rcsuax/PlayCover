@@ -99,10 +99,10 @@ class ControlModel {
     func move(dy : CGFloat, dx : CGFloat){
                 let nx = button.center.x + dx
                 let ny = button.center.y + dy
-        if(nx > 0 && nx < Values.screenWidth){
+        if nx > 0 && nx < InputController.screenWidth {
                     button.setX(x: nx)
                 }
-        if(ny > 0 && ny < Values.screenHeight){
+        if ny > 0 && ny < InputController.screenHeight {
                     button.setY(y: ny)
                 }
     }
@@ -186,10 +186,10 @@ class JoystickButtonModel : ControlModel {
         if let btn = data.parent?.button{
                     let nx =  btn.center.x + dx
                     let ny =  btn.center.y + dy
-                    if(nx > 0 && nx < Values.screenWidth){
+            if nx > 0 && nx < InputController.screenWidth {
                         btn.setX(x: nx)
                     }
-                    if(ny > 0 && ny < Values.screenWidth){
+            if ny > 0 && ny < InputController.screenHeight {
                         btn.setY(y: ny)
                     }
         }

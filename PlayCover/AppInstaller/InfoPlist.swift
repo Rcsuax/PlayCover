@@ -18,6 +18,10 @@ class InfoPlist {
         return try plistValue(key: "CFBundleDisplayName")
     }
     
+    func packageName() throws -> String {
+        return try plistValue(key: "CFBundleIdentifier")
+    }
+    
     func plistValue(key : String) throws -> String {
         if let value = dict?[key] as? String{
             return value

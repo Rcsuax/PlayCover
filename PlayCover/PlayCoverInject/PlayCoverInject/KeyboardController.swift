@@ -23,7 +23,7 @@ class KeyboardController {
     
     func setup(){
         controls = []
-        if let keys = OverlayController.shared.realTimeControls ?? UserDefaults.standard.array(forKey: "playcover.layout"){
+        if let keys = OverlayController.shared.realTimeControls ?? UserDefaults.standard.array(forKey: "playcover.layout2"){
             if(!keys.isEmpty){
                 var counter = 3
                 for case let key as Array<CGFloat> in keys{

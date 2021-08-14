@@ -15,9 +15,9 @@ import AppKit
 //            let rect = screen.frame
 //            let height = rect.size.height
 //            let width = rect.size.width
-//            frame?.size = NSSize(width: (width)  , height: (height) )
+//            frame?.size = NSSize(width: (2560 * 1.3)  , height: (1440 * 1.3) )
 //        }
-//        
+//
 //        window?.setFrame(frame!, display: true)
 //        window?.center()
     }

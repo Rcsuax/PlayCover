@@ -92,6 +92,11 @@ struct AppInstallView: View {
                         }.popover(isPresented: $flow.showAppsDownloadView) {
                             AppsDownloadView().environmentObject(AppsViewModel.shared)
                         }
+                        Button("Troubleshoot"){
+                            flow.showTroubleshootView = true
+                        }.popover(isPresented: $flow.showTroubleshootView) {
+                            TroubleshootView()
+                        }
                         Spacer().frame(minHeight: 20)
                     } else{
                         ProgressView("Installing...")
@@ -138,8 +143,10 @@ struct InstallSettings : View {
                                 .cornerRadius(16).padding()
                 VStack(alignment: .leading){
                     Toggle("Fullscreen & Keymapping", isOn: $installData.makeFullscreen).frame(alignment: .leading)
-                    Toggle("Alternative convert method", isOn: $installData.useAlternativeWay).frame(alignment: .leading)
+                    Toggle("Alternative convert method", isOn: $installData.useAlternativePatch).frame(alignment: .leading)
+                    Toggle("Alternative decrypt method", isOn: $installData.useAlternativeDecrypt).frame(alignment: .leading)
                     Toggle("Fix login in games", isOn: $installData.fixLogin).frame(alignment: .leading)
+                    Toggle("Clear app cache", isOn: $installData.clearAppCaches).frame(alignment: .leading)
                     Toggle("Export for iOS, Mac (Sideloadly, AltStore)", isOn: $installData.exportForSideloadly).frame(alignment: .leading)
                 }.padding(.init(top: 0, leading: 20, bottom: 0, trailing: 0))
             }

@@ -26,8 +26,21 @@ class AppInstaller {
                 let bundleName = try infoPlist.bundleName()
                 let execFile = appDir.appendingPathComponent(appName )
                 let ents = try Entitlements.createEntitlements(temp: tempDir, exec: execFile)
+                let packageName = try infoPlist.packageName()
+                let docAppDir = fm.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("PlayCover").appendingPathComponent(appName).appendingPathComponent(appDir.lastPathComponent)
                 
-                if sh.isIPAEncrypted(exec: execFile){
+                if vm.clearAppCaches {
+                    print("/Users/\(NSUserName())/Library/Containers/\(packageName)")
+                    try fm.delete(at: URL(fileURLWithPath: "/Users/\(NSUserName())/Library/Containers/\(packageName)"))
+                }
+                
+                try fm.delete(at: docAppDir)
+                
+                try BinaryPatcher.shared.extractMachosFrom(appDir)
+                
+                sh.removeQuarantine(appDir)
+                
+                if sh.isMachoEncrypted(exec: execFile){
                     if !sh.isSIPEnabled(){
                         throw PlayCoverError.sipDisabled
                     }
@@ -39,7 +52,7 @@ class AppInstaller {
                 }
                 
                 if !vm.exportForSideloadly{
-                    try BinaryPatcher.patchApp(app: appDir)
+                    try BinaryPatcher.shared.patchApp(appDir)
                     try execFile.fixExecutable()
                     try infoPlist.patchMinVersion()
                     sh.removeQuarantine(appDir)
@@ -87,37 +100,23 @@ class AppInstaller {
             
             func decryptApp(app : URL, temp : URL, name : String, bundleName : String, exec : URL) throws {
                 ulog("IPA is encrypted, trying to decrypt\n")
-                try unpackAppToAppsDir(app: app, temp: temp, name: name, bundleName: bundleName)
+               
                 let sourceExecFile = URL(fileURLWithPath: "/Applications/\(bundleName).app/Wrapper/\(name).app/\(name)", isDirectory: false)
                 let targetExecFile = temp.appendingPathComponent(name, isDirectory: false)
-                var isDecryptMethod2 = false
                 
-                sh.appdecrypt(sourceExecFile, target: targetExecFile)
-                
-                if sh.isIPAEncrypted(exec: targetExecFile){
-                    ulog("IPA is still encrypted, trying again\n")
-                    sh.appdecrypt(sourceExecFile, target: targetExecFile)
-                }
-                
-                if sh.isIPAEncrypted(exec: targetExecFile){
-                    sh.removeAppFromApps(bundleName)
-                    isDecryptMethod2 = true
+                if vm.useAlternativeDecrypt{
                     try installIPA(origipa: url, inAppDir: URL(fileURLWithPath: "/Applications/\(bundleName).app/Wrapper/\(name).app"), tempApp: app)
-                    sh.appdecrypt(sourceExecFile, target: targetExecFile)
+                } else{
+                    try unpackAppToAppsDir(app: app, temp: temp, name: name, bundleName: bundleName)
                 }
                 
-                if sh.isIPAEncrypted(exec: targetExecFile){
+                try BinaryPatcher.shared.decryptMachos(app, installed: "/Applications/\(bundleName).app/Wrapper/\(name).app", exec: exec)
+                
+                if sh.isMachoEncrypted(exec: targetExecFile){
                     ulog("This IPA can't be decrypted on Mac\n")
                     throw PlayCoverError.cantDecryptIpa
                 }
-                
-                try fm.delete(at: app)
-                sh.copyAppToTemp(bundleName, name: name, temp: temp)
-                try fm.delete(at: exec)
-                try fm.copyItem(at: targetExecFile, to: exec)
-                if !isDecryptMethod2 {
-                    sh.removeAppFromApps(bundleName)
-                }
+                sh.removeAppFromApps(bundleName)
             }
             
             func unpackAppToAppsDir(app : URL, temp : URL, name : String, bundleName : String) throws {

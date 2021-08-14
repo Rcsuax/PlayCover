@@ -18,12 +18,12 @@ extension UserDefaults {
 
 extension UIViewController {
     
-    func setScreenValues(shiftX : CGFloat, shiftY : CGFloat, width : CGFloat, height : CGFloat){
+    func setScreenValues(shiftX : Int, shiftY : Int, width : Int, height : Int){
         UserDefaults.standard.setValue([shiftX, shiftY, width, height], forKey: "playcover.screen")
     }
     
-    func getScreenValues() -> Array<CGFloat> {
-        return (UserDefaults.standard.optionalArray(forKey: "playcover.screen") ?? [CGFloat(0.0), CGFloat(0.0), CGFloat(1.3), CGFloat(1.3)]) as! Array<CGFloat>
+    func getScreenValues() -> Array<Int> {
+        return (UserDefaults.standard.optionalArray(forKey: "playcover.screen") ?? [Int(0), Int(0), Int(InputController.screenWidth), Int(InputController.screenHeight)]) as! Array<Int>
     }
     
     func showGameControllerAlert(_ name : String){
@@ -45,17 +45,17 @@ extension UIViewController {
             let textField3 = alert.textFields![2] as UITextField
             let textField4 = alert.textFields![3] as UITextField
             
-            var width = CGFloat(Float(textField3.text!) ??  Float(CGFloat(1.3)))
-            if width < 0.1 || width > 2 {
-                width = CGFloat(1.3)
+            var width = Int(textField3.text!) ?? Int(Values.screenWidth)
+            if width < 100 || width > 4000 {
+                width = Int(Values.screenWidth)
             }
             
-            var height = CGFloat(Float(textField4.text!) ??  Float(CGFloat(1.3)))
-            if height < 0.1 || width > 2{
-                width = CGFloat(1.3)
+            var height = Int(textField4.text!) ?? Int(Values.screenHeight)
+            if width < 100 || width > 4000 {
+                width = Int(Values.screenHeight)
             }
             
-            setScreenValues(shiftX:  CGFloat(Float(textField.text!) ?? Float(CGFloat(0.0))), shiftY: CGFloat(Float(textField2.text!) ??  Float(CGFloat(0.0))), width: width, height: height)
+            setScreenValues(shiftX: Int(textField.text!) ?? 0, shiftY: Int(textField2.text!) ?? 0, width: width, height: height)
             
             InputController.initUI()
         }
