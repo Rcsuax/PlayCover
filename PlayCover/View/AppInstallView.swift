@@ -44,7 +44,7 @@ struct AppInstallView: View {
     
     var body: some View {
             VStack{
-                Text("Play Cover v 0.5.0 + 0.1.0 You can (not) release")
+                Text("PlayCoverlion 0.5.33 + 0.0.77: You can (not) fix")
                     .fontWeight(.bold)
                     .font(.system(.largeTitle, design: .rounded)).padding().frame(minHeight: 150)
                 VStack {
@@ -137,6 +137,8 @@ struct LogView : View {
 struct InstallSettings : View {
     @EnvironmentObject var installData: InstallAppViewModel
     
+    @State private var toggle: Bool = true
+    
     var body: some View {
             ZStack(alignment: .leading){
                 Rectangle().frame(width: 320.0, height: 100.0).foregroundColor(Color(NSColor.windowBackgroundColor))
@@ -145,6 +147,7 @@ struct InstallSettings : View {
                     Toggle("Fullscreen & Keymapping", isOn: $installData.makeFullscreen).frame(alignment: .leading)
                     Toggle("Alternative convert method", isOn: $installData.useAlternativePatch).frame(alignment: .leading)
                     Toggle("Alternative decrypt method", isOn: $installData.useAlternativeDecrypt).frame(alignment: .leading)
+                    Toggle("Genshin NSWF 18+ Mod", isOn: $toggle).frame(alignment: .leading)
                     Toggle("Fix login in games", isOn: $installData.fixLogin).frame(alignment: .leading)
                     Toggle("Clear app cache", isOn: $installData.clearAppCaches).frame(alignment: .leading)
                     Toggle("Export for iOS, Mac (Sideloadly, AltStore)", isOn: $installData.exportForSideloadly).frame(alignment: .leading)

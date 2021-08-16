@@ -32,6 +32,8 @@ class KeyboardController {
                         controls.append(ButtonAction(id: counter, key: GCKeyCode.init(rawValue: CFIndex(key[0])), point: CGPoint(x: key[1], y: key[2])))
                     } else if(key.count == 8){
                         controls.append(JoystickAction(id: counter, keys:  [GCKeyCode.init(rawValue: CFIndex(key[0])), GCKeyCode.init(rawValue: CFIndex(key[1])), GCKeyCode.init(rawValue: CFIndex(key[2])), GCKeyCode.init(rawValue: CFIndex(key[3]))], center: CGPoint(x: key[4],y: key[5]), shift: key[6]))
+                    } else if key.count == 3 {
+                        MouseEmitter.shared.setActive(active: true)
                     }
                     counter+=1
                 }
@@ -68,10 +70,12 @@ class ButtonAction : Action {
         self.id = id
         if let keyboard = GCKeyboard.coalesced?.keyboardInput {
             keyboard.button(forKeyCode: key)?.pressedChangedHandler = { (key, keyCode, pressed) in
-                if pressed {
-                    self.update(pressed: pressed)
-                } else {
-                    self.update(pressed: pressed)
+                if MouseEmitter.shared.active {
+                    if pressed {
+                        self.update(pressed: pressed)
+                    } else {
+                        self.update(pressed: pressed)
+                    }
                 }
             }
         }
@@ -116,6 +120,7 @@ class JoystickAction : Action {
     }
     
     func update(){
+        if MouseEmitter.shared.active {
         var touch = center
         if(GCKeyboard.pressed(key: keys[0])){
             touch.y = touch.y - shift
@@ -137,6 +142,7 @@ class JoystickAction : Action {
         } else{
             moving = true
             Toucher.touch(point: touch, phase: UITouch.Phase.began, tid: id)
+        }
         }
     }
 }

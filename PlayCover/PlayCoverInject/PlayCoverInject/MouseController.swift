@@ -47,7 +47,7 @@ class MouseEmitter{
     var centerY : CGFloat = 0
     var size : CGFloat = 0
     var currentPosition : CGPoint = CGPoint(x: 0, y: 0)
-    var active = true
+    var active = false
     
     func reset(){
         if(active){

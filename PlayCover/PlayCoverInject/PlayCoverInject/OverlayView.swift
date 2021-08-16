@@ -26,13 +26,13 @@ class OverlayController {
     
     public func changeState(){
         if(overlayView.isUserInteractionEnabled){
-            MouseEmitter.shared.setActive(active: true)
+            Dynamic.NSCursor.hide()
             overlayView.isUserInteractionEnabled = false
             overlayView.removeFromSuperview()
             saveButtons()
             InputController.updateControls()
         } else{
-            MouseEmitter.shared.setActive(active: false)
+            Dynamic.NSCursor.unhide()
             overlayView.isUserInteractionEnabled = true
             InputController.window()?.addSubview(overlayView)
             if(overlayView.subviews.count == 0){
