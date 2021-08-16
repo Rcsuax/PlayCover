@@ -40,9 +40,11 @@ class KeyboardController {
         if let keyboard = GCKeyboard.coalesced?.keyboardInput {
             keyboard.button(forKeyCode: .leftAlt)?.pressedChangedHandler = { (key, keyCode, pressed) in
                 if(pressed){
-                    MouseEmitter.shared.setActive(active:  true)
+                    Dynamic.NSCursor.unhide()
+                    MouseEmitter.shared.setActive(active: false)
                 } else{
-                    MouseEmitter.shared.setActive(active:  false)
+                    Dynamic.NSCursor.hide()
+                    MouseEmitter.shared.setActive(active: true)
                 }
             }
         }

@@ -30,7 +30,6 @@ class AppInstaller {
                 let docAppDir = fm.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("PlayCover").appendingPathComponent(appName).appendingPathComponent(appDir.lastPathComponent)
                 
                 if vm.clearAppCaches {
-                    print("/Users/\(NSUserName())/Library/Containers/\(packageName)")
                     try fm.delete(at: URL(fileURLWithPath: "/Users/\(NSUserName())/Library/Containers/\(packageName)"))
                 }
                 

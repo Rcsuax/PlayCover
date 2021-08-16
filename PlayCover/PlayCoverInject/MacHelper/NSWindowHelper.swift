@@ -24,10 +24,12 @@ import AppKit
         
         centre.addObserver(forName: NSWindow.willEnterFullScreenNotification, object: nil, queue: main) { (note) in
             NSApplication.shared.presentationOptions = [NSApplication.PresentationOptions.hideMenuBar, NSApplication.PresentationOptions.hideDock]
+            NSCursor.hide()
         }
         
         centre.addObserver(forName: NSWindow.willExitFullScreenNotification, object: nil, queue: main) { (note) in
            NSApplication.shared.presentationOptions = []
+            NSCursor.unhide()
         }
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
